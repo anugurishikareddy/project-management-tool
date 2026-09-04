@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Tool</title>
+
+```
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #f4f6f9;
+        color: #222;
+    }
+
+    header {
+        background: #222;
+        color: white;
+        padding: 18px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    button {
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #2563eb;
+        color: white;
+        font-weight: bold;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .logout-btn {
+        background: #dc2626;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+
+    .card {
+        background: white;
+        padding: 22px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .login-box {
+        max-width: 450px;
+        margin: 80px auto;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 11px;
+        margin: 8px 0 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    h2 {
+        margin-bottom: 15px;
+    }
+
+    h3 {
+        margin-bottom: 8px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .project,
+    .task,
+    .comment,
+    .notification {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-top: 12px;
+        border-radius: 7px;
+    }
+
+    .task {
+        background: #fafafa;
+    }
+
+    .notification {
+        background: #fff8db;
+    }
+
+    .success {
+        color: green;
+        margin: 10px 0;
+    }
+
+    .error {
+        color: red;
+        margin: 10px 0;
+    }
+
+    .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .small-btn {
+        padding: 7px 11px;
+        font-size: 13px;
+        margin-top: 8px;
+    }
+
+    @media(max-width:700px) {
+        .row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<header>
+    <h1>📋 Project Management Tool</h1>
+
+```
+<button
+    id="logoutBtn"
+    class="logout-btn hidden"
+    type="button">
+    Logout
+</button>
+```
+
+</header>
+
+<!-- LOGIN -->
+
+<div id="loginSection" class="login-box card">
+
+```
+<h2>🔐 Login</h2>
+
+<div id="loginMessage"></div>
+
+<input
+    id="username"
+    type="text"
+    placeholder="Username">
+
+<input
+    id="password"
+    type="password"
+    placeholder="Password">
+
+<button
+    id="loginBtn"
+    type="button">
+    Login
+</button>
+
+<p style="margin-top:15px;">
+    Existing account:
+    <b>rishika_new</b>
+</p>
+```
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="container hidden">
+
+```
+<!-- WELCOME -->
+
+<div class="card">
+
+    <h2>👋 Welcome</h2>
+
+    <p id="welcomeText"></p>
+
+</div>
+
+
+<!-- CREATE PROJECT -->
+
+<div class="card">
+
+    <h2>➕ Create Project</h2>
+
+    <input
+        id="projectName"
+        type="text"
+        placeholder="Project name">
+
+    <textarea
+        id="projectDescription"
+        placeholder="Project description"></textarea>
+
+    <button
+        id="createProjectBtn"
+        type="button">
+        Create Project
+    </button>
+
+    <div id="projectMessage"></div>
+
+</div>
+
+
+<!-- PROJECTS -->
+
+<div class="card">
+
+    <h2>📁 Projects</h2>
+
+    <button
+        id="refreshProjectsBtn"
+        type="button">
+        Refresh Projects
+    </button>
+
+    <div id="projectsList"></div>
+
+</div>
+
+
+<!-- CREATE TASK -->
+
+<div class="card">
+
+    <h2>📝 Create Task</h2>
+
+    <div class="row">
+
+        <div>
+            <label>Project ID</label>
+
+            <input
+                id="taskProject"
+                type="number"
+                value="1">
+        </div>
+
+        <div>
+            <label>Task Title</label>
+
+            <input
+                id="taskTitle"
+                type="text"
+                placeholder="Design dashboard">
+        </div>
+
+    </div>
+
+
+    <textarea
+        id="taskDescription"
+        placeholder="Task description"></textarea>
+
+
+    <div class="row">
+
+        <div>
+            <label>Status</label>
+
+            <select id="taskStatus">
+
+                <option value="todo">
+                    To Do
+                </option>
+
+                <option value="progress">
+                    In Progress
+                </option>
+
+                <option value="done">
+                    Done
+                </option>
+
+            </select>
+        </div>
+
+
+        <div>
+            <label>Priority</label>
+
+            <select id="taskPriority">
+
+                <option value="low">
+                    Low
+                </option>
+
+                <option value="medium">
+                    Medium
+                </option>
+
+                <option value="high">
+                    High
+                </option>
+
+            </select>
+        </div>
+
+    </div>
+
+
+    <button
+        id="createTaskBtn"
+        type="button">
+        Create Task
+    </button>
+
+    <div id="taskMessage"></div>
+
+</div>
+
+
+<!-- TASKS -->
+
+<div class="card">
+
+    <h2>📌 Tasks</h2>
+
+    <button
+        id="refreshTasksBtn"
+        type="button">
+        Refresh Tasks
+    </button>
+
+    <div id="tasksList"></div>
+
+</div>
+
+
+<!-- ADD COMMENT -->
+
+<div class="card">
+
+    <h2>💬 Add Comment</h2>
+
+    <input
+        id="commentTask"
+        type="number"
+        value="1"
+        placeholder="Task ID">
+
+    <textarea
+        id="commentContent"
+        placeholder="Write your comment"></textarea>
+
+    <button
+        id="addCommentBtn"
+        type="button">
+        Add Comment
+    </button>
+
+    <div id="commentMessage"></div>
+
+</div>
+
+
+<!-- COMMENTS -->
+
+<div class="card">
+
+    <h2>💭 Comments</h2>
+
+    <button
+        id="refreshCommentsBtn"
+        type="button">
+        Refresh Comments
+    </button>
+
+    <div id="commentsList"></div>
+
+</div>
+
+
+<!-- NOTIFICATIONS -->
+
+<div class="card">
+
+    <h2>🔔 Notifications</h2>
+
+    <button
+        id="refreshNotificationsBtn"
+        type="button">
+        Refresh Notifications
+    </button>
+
+    <div id="notificationsList"></div>
+
+</div>
+```
+
+</div>
+
+<script>
+
+const API = "/api/";
+
+let token =
+    localStorage.getItem("access_token");
+
+let currentUsername =
+    localStorage.getItem("username") || "User";
+
+
+function el(id) {
+    return document.getElementById(id);
+}
+
+
+/* ================= LOGIN ================= */
+
+async function handleLogin() {
+
+    const username =
+        el("username").value.trim();
+
+    const password =
+        el("password").value;
+
+    const message =
+        el("loginMessage");
+
+
+    if (!username || !password) {
+
+        message.innerHTML =
+            '<p class="error">Enter username and password.</p>';
+
+        return;
+    }
+
+
+    try {
+
+        message.innerHTML =
+            "<p>Logging in...</p>";
+
+
+        const response =
+            await fetch(
+                "/api/token/",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                }
+            );
+
+
+        const text =
+            await response.text();
+
+
+        let data = {};
+
+
+        try {
+            data = JSON.parse(text);
+        }
+        catch {
+            data = {
+                detail: text
+            };
+        }
+
+
+        if (!response.ok) {
+
+            message.innerHTML =
+                '<p class="error">' +
+                (
+                    data.detail ||
+                    data.error ||
+                    data.message ||
+                    "Login failed"
+                ) +
+                '</p>';
+
+            return;
+        }
+
+
+        if (!data.access) {
+
+            message.innerHTML =
+                '<p class="error">' +
+                'Access token not received.' +
+                '</p>';
+
+            return;
+        }
+
+
+        token =
+            data.access;
+
+
+        currentUsername =
+            username;
+
+
+        localStorage.setItem(
+            "access_token",
+            token
+        );
+
+
+        localStorage.setItem(
+            "username",
+            username
+        );
+
+
+        message.innerHTML =
+            '<p class="success">' +
+            'Login successful! ✅' +
+            '</p>';
+
+
+        showDashboard();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Login error:",
+            error
+        );
+
+
+        message.innerHTML =
+            '<p class="error">' +
+            'Cannot connect to backend.' +
+            '</p>';
+    }
+}
+
+
+/* ================= SHOW DASHBOARD ================= */
+
+function showDashboard() {
+
+    el("loginSection")
+        .classList
+        .add("hidden");
+
+
+    el("dashboard")
+        .classList
+        .remove("hidden");
+
+
+    el("logoutBtn")
+        .classList
+        .remove("hidden");
+
+
+    el("welcomeText")
+        .textContent =
+        "Logged in as " +
+        currentUsername;
+
+
+    loadProjects();
+    loadTasks();
+    loadComments();
+    loadNotifications();
+}
+
+
+/* ================= LOGOUT ================= */
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "access_token"
+    );
+
+
+    localStorage.removeItem(
+        "username"
+    );
+
+
+    token = null;
+
+
+    el("dashboard")
+        .classList
+        .add("hidden");
+
+
+    el("logoutBtn")
+        .classList
+        .add("hidden");
+
+
+    el("loginSection")
+        .classList
+        .remove("hidden");
+
+
+    el("loginMessage")
+        .innerHTML = "";
+}
+
+
+/* ================= API HELPER ================= */
+
+async function apiRequest(
+    endpoint,
+    options = {}
+) {
+
+    if (!token) {
+
+        throw new Error(
+            "Please login first."
+        );
+    }
+
+
+    const headers = {
+
+        "Content-Type":
+            "application/json",
+
+        ...(options.headers || {}),
+
+        "Authorization":
+            "Bearer " + token
+
+    };
+
+
+    const response =
+        await fetch(
+            API + endpoint,
+            {
+                ...options,
+                headers: headers
+            }
+        );
+
+
+    const text =
+        await response.text();
+
+
+    let data = {};
+
+
+    if (text) {
+
+        try {
+            data =
+                JSON.parse(text);
+        }
+        catch {
+            data = {
+                detail: text
+            };
+        }
+
+    }
+
+
+    if (response.status === 401) {
+
+        logoutUser();
+
+        throw new Error(
+            "Session expired. Login again."
+        );
+    }
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.detail ||
+            data.error ||
+            data.message ||
+            "Request failed"
+        );
+    }
+
+
+    return data;
+}
+
+
+/* ================= CREATE PROJECT ================= */
+
+async function createProject() {
+
+    const name =
+        el("projectName")
+            .value
+            .trim();
+
+
+    const description =
+        el("projectDescription")
+            .value
+            .trim();
+
+
+    const message =
+        el("projectMessage");
+
+
+    if (!name) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            'Project name required.' +
+            '</p>';
+
+        return;
+    }
+
+
+    try {
+
+        await apiRequest(
+            "projects/",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+
+                    name: name,
+
+                    description:
+                        description
+
+                })
+            }
+        );
+
+
+        message.innerHTML =
+            '<p class="success">' +
+            'Project created successfully! ✅' +
+            '</p>';
+
+
+        el("projectName")
+            .value = "";
+
+
+        el("projectDescription")
+            .value = "";
+
+
+        loadProjects();
+
+    }
+
+    catch (error) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= LOAD PROJECTS ================= */
+
+async function loadProjects() {
+
+    const list =
+        el("projectsList");
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "projects/"
+            );
+
+
+        const projects =
+            Array.isArray(data)
+                ? data
+                : (
+                    data.results || []
+                );
+
+
+        list.innerHTML = "";
+
+
+        if (projects.length === 0) {
+
+            list.innerHTML =
+                "<p>No projects found.</p>";
+
+            return;
+        }
+
+
+        projects.forEach(
+            project => {
+
+                list.innerHTML += `
+
+                    <div class="project">
+
+                        <h3>
+                            📁 ${project.name}
+                        </h3>
+
+                        <p>
+                            ${project.description || ""}
+                        </p>
+
+                        <p>
+                            <b>Project ID:</b>
+                            ${project.id}
+                        </p>
+
+                        <p>
+                            <b>Owner:</b>
+                            ${project.owner}
+                        </p>
+
+                    </div>
+
+                `;
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        list.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= CREATE TASK ================= */
+
+async function createTask() {
+
+    const project =
+        Number(
+            el("taskProject").value
+        );
+
+
+    const title =
+        el("taskTitle")
+            .value
+            .trim();
+
+
+    const description =
+        el("taskDescription")
+            .value
+            .trim();
+
+
+    const status =
+        el("taskStatus").value;
+
+
+    const priority =
+        el("taskPriority").value;
+
+
+    const message =
+        el("taskMessage");
+
+
+    if (!project) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            'Project ID required.' +
+            '</p>';
+
+        return;
+    }
+
+
+    if (!title) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            'Task title required.' +
+            '</p>';
+
+        return;
+    }
+
+
+    try {
+
+        await apiRequest(
+            "tasks/",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+
+                    project: project,
+
+                    project_id: project,
+
+                    title: title,
+
+                    description:
+                        description,
+
+                    status: status,
+
+                    priority: priority
+
+                })
+            }
+        );
+
+
+        message.innerHTML =
+            '<p class="success">' +
+            'Task created successfully! ✅' +
+            '</p>';
+
+
+        el("taskTitle")
+            .value = "";
+
+
+        el("taskDescription")
+            .value = "";
+
+
+        loadTasks();
+
+    }
+
+    catch (error) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= LOAD TASKS ================= */
+
+async function loadTasks() {
+
+    const list =
+        el("tasksList");
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "tasks/"
+            );
+
+
+        const tasks =
+            Array.isArray(data)
+                ? data
+                : (
+                    data.results || []
+                );
+
+
+        list.innerHTML = "";
+
+
+        if (tasks.length === 0) {
+
+            list.innerHTML =
+                "<p>No tasks found.</p>";
+
+            return;
+        }
+
+
+        tasks.forEach(
+            task => {
+
+                const box =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                box.className =
+                    "task";
+
+
+                box.innerHTML = `
+
+                    <h3>
+                        📝 ${task.title}
+                    </h3>
+
+                    <p>
+                        ${task.description || ""}
+                    </p>
+
+                    <p>
+                        <b>ID:</b>
+                        ${task.id}
+                    </p>
+
+                    <p>
+                        <b>Project:</b>
+                        ${task.project}
+                    </p>
+
+                    <p>
+                        <b>Status:</b>
+                        ${task.status}
+                    </p>
+
+                    <p>
+                        <b>Priority:</b>
+                        ${task.priority}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="small-btn taskCommentBtn"
+                        data-task-id="${task.id}">
+                        Comment
+                    </button>
+                `;
+
+
+                list.appendChild(box);
+
+            }
+        );
+
+
+        document
+            .querySelectorAll(
+                ".taskCommentBtn"
+            )
+            .forEach(
+                button => {
+
+                    button.addEventListener(
+                        "click",
+                        function () {
+
+                            const taskId =
+                                this.getAttribute(
+                                    "data-task-id"
+                                );
+
+
+                            el("commentTask")
+                                .value =
+                                taskId;
+
+
+                            el("commentContent")
+                                .focus();
+
+
+                            el("commentContent")
+                                .scrollIntoView({
+                                    behavior:
+                                        "smooth"
+                                });
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+    catch (error) {
+
+        list.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= ADD COMMENT ================= */
+
+async function addTaskComment() {
+
+    const taskValue =
+        el("commentTask")
+            .value
+            .trim();
+
+
+    const task =
+        parseInt(
+            taskValue,
+            10
+        );
+
+
+    const content =
+        el("commentContent")
+            .value
+            .trim();
+
+
+    const message =
+        el("commentMessage");
+
+
+    if (
+        !taskValue ||
+        Number.isNaN(task) ||
+        task <= 0
+    ) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            'Valid Task ID required.' +
+            '</p>';
+
+        return;
+    }
+
+
+    if (!content) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            'Comment required.' +
+            '</p>';
+
+        return;
+    }
+
+
+    try {
+
+        await apiRequest(
+            "comments/",
+            {
+                method: "POST",
+
+                body: JSON.stringify({
+
+                    task: task,
+
+                    task_id: task,
+
+                    content: content
+
+                })
+            }
+        );
+
+
+        message.innerHTML =
+            '<p class="success">' +
+            'Comment added successfully! ✅' +
+            '</p>';
+
+
+        el("commentContent")
+            .value = "";
+
+
+        loadComments();
+
+    }
+
+    catch (error) {
+
+        message.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= LOAD COMMENTS ================= */
+
+async function loadComments() {
+
+    const list =
+        el("commentsList");
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "comments/"
+            );
+
+
+        const comments =
+            Array.isArray(data)
+                ? data
+                : (
+                    data.results || []
+                );
+
+
+        list.innerHTML = "";
+
+
+        if (comments.length === 0) {
+
+            list.innerHTML =
+                "<p>No comments found.</p>";
+
+            return;
+        }
+
+
+        comments.forEach(
+            comment => {
+
+                list.innerHTML += `
+
+                    <div class="comment">
+
+                        <p>
+                            💬 ${comment.content}
+                        </p>
+
+                        <small>
+
+                            Task:
+                            ${comment.task}
+
+                            |
+
+                            User:
+                            ${comment.user}
+
+                        </small>
+
+                    </div>
+
+                `;
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        list.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= NOTIFICATIONS ================= */
+
+async function loadNotifications() {
+
+    const list =
+        el("notificationsList");
+
+
+    try {
+
+        const data =
+            await apiRequest(
+                "notifications/"
+            );
+
+
+        const notifications =
+            Array.isArray(data)
+                ? data
+                : (
+                    data.results || []
+                );
+
+
+        list.innerHTML = "";
+
+
+        if (
+            notifications.length === 0
+        ) {
+
+            list.innerHTML =
+                "<p>No notifications found.</p>";
+
+            return;
+        }
+
+
+        notifications.forEach(
+            notification => {
+
+                list.innerHTML += `
+
+                    <div class="notification">
+
+                        <p>
+                            🔔
+                            ${notification.message}
+                        </p>
+
+                        <small>
+
+                            ${
+                                notification.is_read
+                                ? "Read"
+                                : "Unread"
+                            }
+
+                        </small>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        list.innerHTML =
+            '<p class="error">' +
+            error.message +
+            '</p>';
+    }
+}
+
+
+/* ================= BUTTON EVENTS ================= */
+
+el("loginBtn")
+    .addEventListener(
+        "click",
+        handleLogin
+    );
+
+
+el("logoutBtn")
+    .addEventListener(
+        "click",
+        logoutUser
+    );
+
+
+el("createProjectBtn")
+    .addEventListener(
+        "click",
+        createProject
+    );
+
+
+el("refreshProjectsBtn")
+    .addEventListener(
+        "click",
+        loadProjects
+    );
+
+
+el("createTaskBtn")
+    .addEventListener(
+        "click",
+        createTask
+    );
+
+
+el("refreshTasksBtn")
+    .addEventListener(
+        "click",
+        loadTasks
+    );
+
+
+el("addCommentBtn")
+    .addEventListener(
+        "click",
+        addTaskComment
+    );
+
+
+el("refreshCommentsBtn")
+    .addEventListener(
+        "click",
+        loadComments
+    );
+
+
+el("refreshNotificationsBtn")
+    .addEventListener(
+        "click",
+        loadNotifications
+    );
+
+
+/* ================= ENTER LOGIN ================= */
+
+el("password")
+    .addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                handleLogin();
+
+            }
+
+        }
+    );
+
+
+/* ================= AUTO LOGIN ================= */
+
+if (token) {
+
+    showDashboard();
+
+}
+
+</script>
+
+</body>
+</html>
